@@ -7,12 +7,11 @@
 <body>
     <h1>个人资料</h1>
 
-    <h2>{{ user.getUsername() }}</h2>
-    <p>真实姓名: {{ user.getRealName() }}</p>
-    <p>出生日期: {{ user.getDateOfBirth() }}</p>
-    <p>地址: {{ user.getAddress() }}</p>
-
-    <h2>我的预订</h2>
+    <h2>{{ g.user.getUsername() }}</h2> 
+    <p>真实姓名: {{ g.user.getRealName() }}</p> 
+    <p>出生日期: {{ g.user.getDateOfBirth() }}</p> 
+    <p>地址: {{ g.user.getAddress() }}</p> 
+    <a href="{{ url_for('edit_profile') }}">修改资料</a>
     <table>
         <thead>
             <tr>
@@ -25,10 +24,10 @@
         <tbody>
             {% for reservation in reservations %}
             <tr>
-                <td>{{ reservation.car.getMake() }} {{ reservation.car.getModel() }}</td>
-                <td>{{ reservation.getStartTime() }}</td>
-                <td>{{ reservation.getEndTime() }}</td>
-                <td>{{ reservation.getStatus() }}</td>
+                <td>{{ reservation.car.make }} {{ reservation.car.model }}</td> 
+                <td>{{ reservation.start_time }}</td> 
+                <td>{{ reservation.end_time }}</td> 
+                <td>{{ reservation.status }}</td> 
             </tr>
             {% endfor %}
         </tbody>

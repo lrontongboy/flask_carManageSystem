@@ -4,23 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
-    <script src="{{ url_for('static', filename='js/jquery-3.7.1.js') }}" type="text/javascript"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}">
+    <script src="{{ url_for('static', filename='jquery-3.7.1.js') }}" type="text/javascript"></script>
     {% block link %}{% endblock %}
 </head>
-<body style="background-image: url('{{ url_for('static', filename='img/bg.png') }}')">
+<body style="background-image: url('{{ url_for('static', filename='img/bg.png') }}')"> 
 <div class="topbar-wrap white">
     <div class="topbar-inner clearfix">
         <div class="topbar-logo-wrap clearfix">
             <ul class="navbar-list clearfix">
-                <li><a class="on" href="{{ url_for('index') }}">Student System</a></li>
+                <li><a class="on" href="{{ url_for('index') }}">Car Rental System</a></li>
                 <li><a href="{{ url_for('index') }}" target="_blank">Home</a></li>
             </ul>
         </div>
         <div class="top-info-wrap">
             <ul class="top-info-list clearfix">
-                <li><a href="#">{{ user.name }}</a></li>
-                <li><a href="{{ url_for('logout') }}">Log out</a></li>
+               
+                    <li><a href="#">{{ g.user.getUsername() }}</a></li> 
+                    <li><a href="{{ url_for('logout') }}">退出</a></li>
+                
             </ul>
         </div>
         {% block header %}{% endblock %}
@@ -30,40 +32,43 @@
     <div class="sidebar-wrap">
         <div class="sidebar-content">
             <ul class="sidebar-list">
-                <li id="register_users"><a href="{{ url_for('admin_register_users') }}">Registered user</a></li>
-                <li><a href="{{ url_for('admin_can_register', identity=1) }}" id="identity1">Teacher</a></li>
-                <li><a href="{{ url_for('admin_can_register', identity=2) }}" id="identity2">Student</a></li>
-                <li><a href="{{ url_for('admin_lecture') }}" id="lecture">Lecture Management</a></li>
-                <li><a href="{{ url_for('admin_course') }}" id="course">Course Management</a></li>
+                
+                    <li id="available_cars"><a href="{{ url_for('available_cars') }}">可预订车辆</a></li>
+                    <li id="profile"><a href="{{ url_for('profile') }}">个人信息</a></li> 
+                    <!-- <li id="manage_users"><a href="{{ url_for('my_reservations') }}">我的预定</a></li>  -->
+                
             </ul>
         </div>
     </div>
-    {% block body %}{% endblock %}
-
+    <div class="main-content"> 
+        {% block body %}{% endblock %}
+    </div>
 </div>
-<script src="{{ url_for('static', filename='js/base.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='base.js') }}" type="text/javascript"></script>
 <script>
     url = window.location.href
-    if (url.includes('register_users')) {
-        li = document.getElementById('register_users')
+    if (url.includes('available_cars')) {
+        li = document.getElementById('available_cars')
         li.classList.add('selected')
     }
-    if (url.includes('identity=2')) {
-        li = document.getElementById('identity2')
+    if (url.includes('profile')) {
+        li = document.getElementById('profile')
         li.classList.add('selected')
     }
-    if (url.includes('identity=1')) {
-        li = document.getElementById('identity1')
-        li.classList.add('selected')
-    }
-    if (url.includes('/lecture')) {
-        li = document.getElementById('lecture')
-        li.classList.add('selected')
-    }
-    if (url.includes('course')) {
-        li = document.getElementById('course')
-        li.classList.add('selected')
-    }
+    // $(document).ready(function() {
+    //     // 获取当前页面的URL
+    //     var url = window.location.pathname;
+
+    //     // 移除所有菜单项的 "selected" 类
+    //     $('.sidebar-list li').removeClass('selected');
+
+    //     // 根据 URL 添加 "selected" 类到对应的菜单项
+    //     if (url.includes('/available_cars')) {
+    //         $('#available_cars').addClass('selected');
+    //     } else if (url.includes('/profile')) {
+    //         $('#profile').addClass('selected');
+    //     } 
+    // });
 </script>
 </body>
 </html>

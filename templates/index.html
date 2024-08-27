@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "user/user_base.html" %}
 
 {% block title %}Car Management System{% endblock %}
 
@@ -36,7 +36,7 @@
                     </script>
                 {% else %}
                     <script>
-                        // window.location.href = "{{ url_for('reservation') }}";
+                        window.location.href = "{{ url_for('available_cars') }}";
                     </script>
                 {% endif %}
             {% endif %}

@@ -16,7 +16,8 @@ def check_for_login():
         pass
     elif 'logged_in' in session and session['logged_in'] and 'user_id' in session:  # 检查 'id' 是否存在
         app.user = User.find(session['user_id'])
-        g.user = app.user.to_dict()
+        # g.user = app.user.to_dict()
+        g.user = User.find(session['user_id'])
     else:
         print(session)
         return redirect('/login_form')
@@ -81,13 +82,39 @@ def profile():
             request.form['date_of_birth'],
             request.form['address']
         )
-        return redirect('/')  #  Redirect to the homepage or another page
+        session['user'] = g.user.to_dict()  # 将更新后的用户信息存储到会话中
+        return redirect('/profile')  # 重定向到 /profile
     else:
         user = User.find(session['user_id'])
         reservations = Reservation.findByUserID(user.getID())
-        return render_template('profile.html', user=user, reservations=reservations)
+        return render_template('user/profile.html', user=user, reservations=reservations)
+    
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@user_login
+def edit_profile():
+    if g.user:  # 检查 g.user 是否已经被赋值
+        print(type(g.user))
+    if request.method == 'POST':
+        # 处理表单提交，更新用户信息
+        try:
+            date_of_birth = datetime.strptime(request.form['date_of_birth'], '%Y-%m-%d').date()
+        except ValueError:
+            # 处理日期格式错误
+            return jsonify({'success': False, 'error': '日期格式错误'}), 400
 
-@app.route('/reservation', methods=['GET', 'POST'])
+        g.user.update_profile(
+            request.form['real_name'],
+            date_of_birth,  # 传递日期对象
+            request.form['address']
+        )
+        session['user'] = g.user.to_dict()
+        
+        return jsonify({'success': True}), 200  # 返回 JSON 响应
+    else:
+        # 渲染修改资料页面
+        return render_template('user/edit_profile.html', user=g.user)
+
+@app.route('/reservation/<int:car_id>', methods=['GET', 'POST'])
 @user_login
 def reservation():
     if request.method == 'POST':
@@ -111,9 +138,22 @@ def reservation():
 
 @app.route('/')
 def index():
-    cars = Car.allAvailable()
     users = User.all()
-    return render_template('index.html', cars=cars, user=users)
+    return render_template('index.html', user=users)
+
+@app.route('/available_cars')
+@user_login
+def available_cars():
+    available_cars = Car.allAvailable()
+    return render_template('user/available_car.html', cars=available_cars)
+
+@app.route('/my_reservations')
+@user_login
+def my_reservations():
+    """显示当前用户的所有预订信息"""
+    user_id = session['user_id']  # 获取当前用户的 ID
+    reservations = Reservation.findByUserID(user_id)  # 获取用户的预订信息
+    return render_template('my_reservations.html', reservations=reservations)
 
 @app.route('/car/<int:car_id>')
 def car_info(car_id):

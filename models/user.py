@@ -100,3 +100,10 @@ class User:
             self._id = None  # After deletion, set the ID to None, indicating that the user object is no longer associated with the database record.
         else:
             raise ValueError("Unable to delete user without ID.")
+        
+
+    def update_profile(self, real_name, date_of_birth, address):
+        self._real_name = real_name
+        self._date_of_birth = date_of_birth
+        self._address = address
+        self.save()  # 保存更新后的信息到数据库

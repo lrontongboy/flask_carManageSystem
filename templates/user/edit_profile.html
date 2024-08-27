@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改资料</title>
+</head>
+<body>
+    <h1>修改资料</h1>
+
+    <form id="edit-profile-form"> 
+        <label for="real_name">真实姓名:</label>
+        <input type="text" id="real_name" name="real_name" value="{{ g.user.real_name }}"><br>
+
+        <label for="date_of_birth">出生日期:</label>
+        <input type="date" id="date_of_birth" name="date_of_birth" value="{{ g.user.date_of_birth }}"><br>
+
+        <label for="address">地址:</label>
+        <input type="text" id="address" name="address" value="{{ g.user.address }}"><br>
+
+        <button type="button" id="save-profile-btn">保存</button> 
+    </form>
+
+    <a href="{{ url_for('profile') }}">返回个人资料</a>
+
+    <script>
+        // 获取表单和提交按钮元素
+        const form = document.getElementById('edit-profile-form');
+        const saveBtn = document.getElementById('save-profile-btn');
+
+        // 为提交按钮添加点击事件监听器
+        saveBtn.addEventListener('click', () => {
+            // 获取表单数据
+            const formData = new FormData(form);
+
+            // 发送 AJAX 请求
+            fetch('/edit_profile', { 
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                // 处理响应
+                if (response.ok) {
+                    // 更新成功，可以进行一些操作，例如显示成功消息或刷新页面
+                    alert('资料修改成功！');
+                    window.location.href = '/profile'; 
+                } else {
+                    // 更新失败，处理错误
+                    alert('资料修改失败，请稍后再试。');
+                }
+            })
+            .catch(error => {
+                // 处理网络错误
+                console.error('Error:', error);
+                alert('网络错误，请稍后再试。');
+            });
+        });
+    </script>
+</body>
+</html>

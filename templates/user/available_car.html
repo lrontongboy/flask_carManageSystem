@@ -1,0 +1,64 @@
+{% extends "user/user_base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+
+
+
+{% block link %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"/>
+{% endblock %}
+
+
+
+
+{% block header %}
+
+{% endblock %}
+
+{% block body %}
+<div class="main-wrap">
+  <div class="crumb-wrap">
+    <div class="crumb-list">
+      <button id="toggleSidebar">Switch Sidebar</button>
+      <a href="{{ url_for('available_cars') }}">Home</a>
+      <span class="crumb-step">&gt;</span>
+      <span class="crumb-name">可预订车辆</span>
+    </div>
+  </div>
+  <div class="result-wrap">
+    <div class="result-title">
+      <h1>可预订车辆</h1>
+    </div>
+    <div class="result-content">
+      {% if cars %}
+      <table class="result-tab" id="userTable">
+        <thead>
+          <tr>
+            <th>车辆品牌</th>
+            <th>车辆型号</th>
+            <th>年份</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for car in cars %}
+          <tr>
+            <td>{{ car.make }}</td>
+            <td>{{ car.model }}</td>
+            <td>{{ car.year }}</td>
+            <td>
+              <a href="{{ url_for('reservation', car_id=car.getID()) }}">预订</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p>暂无可预订车辆</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
