@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ car.getMake() }} {{ car.getModel() }}</title>
+</head>
+<body>
+    <h1>{{ car.getMake() }} {{ car.getModel() }}</h1>
+
+    <img src="{{ car.getImageURL() }}" alt="{{ car.getMake() }} {{ car.getModel() }}" width="300">
+
+    <p>年份: {{ car.getYear() }}</p>
+    <p>颜色: {{ car.getColor() }}</p>
+    <p>详情: {{ car.getDetails() }}</p>
+
+    {% if car.isAvailable() %}
+        <a href="{{ url_for('reserve_info', car_id=car.getID()) }}">预订</a>
+    {% else %}
+        <p>不可用</p>
+    {% endif %}
+
+    <a href="{{ url_for('main') }}">返回首页</a>
+</body>
+</html>

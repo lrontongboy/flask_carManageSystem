@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>预订管理</title>
+</head>
+<body>
+    <h1>预订管理</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>用户</th>
+                <th>车辆</th>
+                <th>开始时间</th>
+                <th>结束时间</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in reservations %}
+            <tr>
+                <td>{{ reservation.getID() }}</td>
+                <td>{{ reservation.getUser().getUsername() }}</td>  {# 假设 reservation 对象有关联的用户对象 #}
+                <td>{{ reservation.getCar().getMake() }} {{ reservation.getCar().getModel() }}</td> {# 假设 reservation 对象有关联的车辆对象 #}
+                <td>{{ reservation.getStartTime() }}</td>
+                <td>{{ reservation.getEndTime() }}</td>
+                <td>{{ reservation.getStatus() }}</td>
+                <td>
+                    <a href="#">编辑</a>
+                    <a href="#">取消</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('admin') }}">返回管理员面板</a>
+</body>
+</html>

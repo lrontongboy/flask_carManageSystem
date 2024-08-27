@@ -1,0 +1,117 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block link %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"/>
+{% endblock %}
+
+
+
+
+{% block header %}
+
+{% endblock %}
+
+
+
+
+
+{% block body %}
+    <div class="main-wrap">
+
+        <div class="crumb-wrap">
+            <div class="crumb-list"><button id="toggleSidebar">Switch Sidebar</button><a href="{{ url_for('admin.register_users') }}">Home</a>
+                <span class="crumb-step">&gt;</span><span class="crumb-name">Registered user</span></div>
+        </div>
+        <div class="result-wrap">
+            <form name="myform" id="myform" method="get">
+                <div class="result-title">
+                    <label for="">Search
+                        <select name="check" id="">
+                            {% if args %}
+                                {% if args.get('check') == 'id_card' %}
+                                    <option value="username">Name</option>
+                                    <option value="id_card" selected>Student ID/Teacher ID</option>
+                                {% else %}
+                                    <option value="username" selected>Name</option>
+                                    <option value="id_card">Student ID/Teacher ID</option>
+                                {% endif %}
+                            {% else %}
+                                <option value="username" selected>Name</option>
+                                <option value="id_card">Student ID/Teacher ID</option>
+                            {% endif %}
+                        </select>
+                    </label>
+                    <input type="text" placeholder="Search" name="name"
+                           value="{% if args %}{{ args.get('name') }}{% endif %}">
+                    <button>Search</button>
+                </div>
+            </form>
+            <strong>Total {{ pagination.total }}</strong>
+            <div class="result-content" id="scroll">
+                <table class="result-tab" id="userTable">
+                    <tr>
+                        <th>Id</th>
+                        <th>Student ID/Teacher ID</th>
+                        <th>Name</th>
+                        <th>Identity&nbsp;&nbsp;<i title="0 means administrator,1 means teacher,2 means student">℗</i>
+                        </th>
+                        <th>Latterly login</th>
+                        <th>Register time</th>
+                        <th></th>
+                    </tr>
+                    {% for u in pagination.items %}
+                        <tr>
+                            <td></td>
+                            <td>{{ u.id_card }}</td>
+                            <td>{{ u.name }}</td>
+                            <td>{{ u.identity }}</td>
+                            <td>{{ u.new_time }}</td>
+                            <td>{{ u.join_time }}</td>
+                            <td><a href="{{ url_for('admin.delete_user', user_id=u.id_card) }}" class="delete_link">delete</a></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="list-page">
+                <ul>
+
+                    {% for p in pagination.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+                        {% if p %}
+                            <li><a href="{{ url_for('admin.register_users', page=p) }}">{{ p }}</a></li>
+                        {% else %}
+                            <li><a>...</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+    const table = $("#userTable");
+    const tbody = table.find("tbody").first();
+    for (let i = 0; i < 30; i++) {
+        const row = tbody.find("tr").eq(i + 1);
+        const cell = row.find("td").first();
+        cell.html(i + 1);
+    }
+    $(document).ready(function () {
+            $('.delete_link').on('click', function (e) {
+                e.preventDefault();
+                var url = $(this).attr('href');
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (response) {
+                        alert(response.message);
+                        window.location.href = response.href;
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
+

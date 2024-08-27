@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Car Management System{% endblock %}
+
+{% block link %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+{% endblock %}
+
+{% block header %}
+    <div class="top-info-wrap">
+        <ul class="top-info-list clearfix">
+            {% if not user %}
+                <li><a href="{{ url_for('login_form') }}">登录</a></li>
+                <li><a href="{{ url_for('registration_form') }}">注册</a></li>
+            {% else %}
+                <li><a href="{{ url_for('logout') }}">退出</a></li> 
+            {% endif %}
+        </ul>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <main>
+        <div class="container">
+            <h2>欢迎来到汽车租赁系统</h2>
+            {% if not user %}
+                <script>
+                    window.location.href = "{{ url_for('login_form') }}";
+                    console.log("user",user)
+                </script>
+            {% else %}
+                {% if user.is_admin %}
+                    <script>
+                        
+                        window.location.href = "{{ url_for('admin_register_users') }}";
+                    </script>
+                {% else %}
+                    <script>
+                        // window.location.href = "{{ url_for('reservation') }}";
+                    </script>
+                {% endif %}
+            {% endif %}
+            {% if cars %}
+                <h3>可租赁车辆</h3>
+                <ul>
+                {% for car in cars %}
+                    <li>{{ car.getMake() }} {{ car.getModel() }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>暂无可租赁车辆</p>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}

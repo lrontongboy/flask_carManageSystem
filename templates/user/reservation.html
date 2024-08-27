@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>预订车辆</title>
+</head>
+<body>
+    <h1>预订车辆</h1>
+
+    <h2>{{ car.getMake() }} {{ car.getModel() }}</h2>
+
+    <form method="POST" action="{{ url_for('reservation') }}">
+        <input type="hidden" name="car_id" value="{{ car_id }}">
+
+        <label for="start_time">开始时间:</label>
+        <input type="datetime-local" id="start_time" name="start_time" required>
+
+        <br>
+
+        <label for="end_time">结束时间:</label>
+        <input type="datetime-local" id="end_time" name="end_time" required>
+
+        <br>
+
+        <button type="submit">提交预订</button>
+    </form>
+
+    <a href="{{ url_for('main') }}">返回首页</a>
+</body>
+</html>
