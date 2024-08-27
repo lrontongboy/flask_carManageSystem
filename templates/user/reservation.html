@@ -9,8 +9,8 @@
 
     <h2>{{ car.getMake() }} {{ car.getModel() }}</h2>
 
-    <form method="POST" action="{{ url_for('reservation') }}">
-        <input type="hidden" name="car_id" value="{{ car_id }}">
+    <form method="POST" action="{{ url_for('reservation', car_id=car.getID()) }}">
+        <input type="hidden" name="car_id" value="{{ car.getID() }}">
 
         <label for="start_time">开始时间:</label>
         <input type="datetime-local" id="start_time" name="start_time" required>
@@ -25,6 +25,6 @@
         <button type="submit">提交预订</button>
     </form>
 
-    <a href="{{ url_for('main') }}">返回首页</a>
+    <a href="{{ url_for('index') }}">返回首页</a>
 </body>
 </html>

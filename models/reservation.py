@@ -64,3 +64,48 @@ class Reservation:
             reservation = Reservation(*record)
             reservations.append(reservation)
         return reservations
+    
+    @staticmethod
+    def check_conflict(car_id, start_time, end_time):
+        query = """
+            SELECT COUNT(*)
+            FROM reservations
+            WHERE car_id = %s
+              AND (
+                (start_time <= %s AND end_time >= %s) OR 
+                (start_time < %s AND end_time > %s) OR
+                (start_time < %s AND end_time > %s) OR
+                (start_time > %s AND end_time < %s)   
+              )
+        """
+        params = (car_id, start_time, end_time, start_time, end_time, end_time, start_time, start_time, end_time)
+        result = execute_query(query, params)
+        count = result[0][0]  # 获取查询结果中的计数
+
+        return count > 0
+    
+
+    @staticmethod
+    def get_conflict_info(car_id, start_time, end_time):
+        query = """
+            SELECT *
+            FROM reservations
+            WHERE car_id = %s
+              AND (
+                (start_time <= %s AND end_time >= %s) OR
+                (start_time < %s AND end_time > %s) OR
+                (start_time < %s AND end_time > %s) OR
+                (start_time > %s AND end_time < %s)
+              )
+        """
+        params = (car_id, start_time, end_time, start_time, end_time, end_time, start_time, start_time, end_time)
+        result = execute_query(query, params)
+
+        if result:
+            # 假设数据库返回的预订信息包含 start_time 和 end_time 字段，且它们在元组中的索引分别为 3 和 4
+            conflict_reservation = result[0]
+            start_time_str = conflict_reservation[3].strftime('%Y-%m-%d %H:%M')  # 使用整数索引 3 访问 start_time
+            end_time_str = conflict_reservation[4].strftime('%Y-%m-%d %H:%M')  # 使用整数索引 4 访问 end_time
+            return f"{start_time_str} - {end_time_str}"
+        else:
+            return None

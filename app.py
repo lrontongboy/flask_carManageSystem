@@ -116,9 +116,9 @@ def edit_profile():
 
 @app.route('/reservation/<int:car_id>', methods=['GET', 'POST'])
 @user_login
-def reservation():
+def reservation(car_id):
+    car = Car.find(car_id)
     if request.method == 'POST':
-        car_id = int(request.form['car_id'])
         start_time_str = request.form['start_time']
         end_time_str = request.form['end_time']
 
@@ -127,14 +127,14 @@ def reservation():
 
         # check timestamp
         if Reservation.check_conflict(car_id, start_time, end_time):
-            return jsonify({'status': 'error', 'message': 'The selected time slot has already been booked, please choose another time.'}), 400
+            conflict_info = Reservation.get_conflict_info(car_id, start_time, end_time)
+            return jsonify({'status': 'error', 'message': f'时间段冲突：{conflict_info}'}), 400
 
         new_reservation = Reservation(None, session['user_id'], car_id, start_time, end_time)
         new_reservation.save()
-        return jsonify({'status': 'success', 'message': url_for('index')}), 200
+        return jsonify({'status': 'success', 'message': url_for('reservation_details', reservation_id=new_reservation.getID())}), 200
     else:
-        car_id = request.args.get('car_id')
-        return render_template('reservation.html', car_id=car_id)
+        return render_template('user/reservation.html', car=car)
 
 @app.route('/')
 def index():

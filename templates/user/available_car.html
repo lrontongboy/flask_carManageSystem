@@ -45,9 +45,9 @@
         <tbody>
           {% for car in cars %}
           <tr>
-            <td>{{ car.make }}</td>
-            <td>{{ car.model }}</td>
-            <td>{{ car.year }}</td>
+            <td>{{ car.getMake() }}</td>
+            <td>{{ car.getModel() }}</td>
+            <td>{{ car.getYear() }}</td>
             <td>
               <a href="{{ url_for('reservation', car_id=car.getID()) }}">预订</a>
             </td>
