@@ -1,0 +1,63 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block link %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"/>
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block body %}
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list">
+            <button id="toggleSidebar">Switch Sidebar</button>
+            <a href="{{ url_for('admin_register_user') }}">Home</a>
+            <span class="crumb-step">&gt;</span>
+            <a class="crumb-name" href="{{ url_for('admin_register_user') }}">Registration Management</a>
+            <span class="crumb-step">&gt;</span>
+            <span>New registered personnel</span>
+        </div>
+    </div>
+
+    <div class="result-wrap">
+        <div class="add_stu">
+            <form id="add_user_form" name="add_user_form" class="add_form">
+                <h3>Add user</h3>
+                <input type="hidden" name="is_admin" value="0"> 
+                <label for="username">Username:<input class="common-text" name="username" size="50" type="text" required></label>
+                <label for="password">Password:<input class="common-text" name="password" size="50" type="password" required></label>
+                <label for="real_name">Real Name:<input class="common-text" name="real_name" size="50" type="text"></label>
+                <label for="date_of_birth">Date of Birth:<input class="common-text" name="date_of_birth" size="50" type="date"></label>
+                <label for="address">Address:<input class="common-text" name="address" size="50" type="text"></label>
+                <button id="submit_btn" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#add_user_form').submit(function(e) {
+            e.preventDefault(); 
+            $.ajax({
+                url: '{{ url_for('add_user') }}',
+                type: 'POST',
+                data: $(this).serialize(), 
+                dataType: 'json',
+                success: function(response) {
+                    alert(response.message);
+                    if (response.status === 'success') {
+                        $('#add_user_form')[0].reset(); 
+                    }
+                },
+                error: function() {
+                    alert('Adding user failed, please try again later.');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

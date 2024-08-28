@@ -24,10 +24,10 @@
         <tbody>
             {% for reservation in reservations %}
             <tr>
-                <td>{{ reservation.car.make }} {{ reservation.car.model }}</td> 
-                <td>{{ reservation.start_time }}</td> 
-                <td>{{ reservation.end_time }}</td> 
-                <td>{{ reservation.status }}</td> 
+                <td>{{ reservation.getCar().getMake() }} {{ reservation.getCar().getModel() }}</td> 
+                <td>{{ reservation.getStartTime() }}</td> 
+                <td>{{ reservation.getEndTime() }}</td> 
+                <td>{{ reservation.getStatus() }}</td> 
             </tr>
             {% endfor %}
         </tbody>

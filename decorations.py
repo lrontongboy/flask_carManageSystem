@@ -14,7 +14,6 @@ def admin_login(func):
 def user_login(func):
     @wraps(func)
     def verify(*args, **kwargs):
-        # print(g.user, "1111")
         if g.user and not g.user.isAdmin():
             return func(*args, **kwargs)
         else:

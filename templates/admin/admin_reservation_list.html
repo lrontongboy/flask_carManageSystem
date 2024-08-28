@@ -1,0 +1,81 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block link %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"/>
+{% endblock %}
+
+{% block body %}
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list">
+            <button id="toggleSidebar">Switch Sidebar</button>
+            <a href="{{ url_for('admin_reservation_list') }}">Home</a> 
+            <span class="crumb-step">&gt;</span>
+            <span class="crumb-name">Order Management</span>
+        </div>
+    </div>
+
+    <div class="result-wrap">
+        <strong>Total Orders: {{ pagination.total }}</strong>
+
+        <div class="result-content">
+            <table class="result-tab" id="reservationTable">
+                <thead> 
+                    <tr>
+                        <th>ID</th>
+                        <th>User ID</th>
+                        <th>Car Make</th>
+                        <th>Car Model</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Status</th>
+                        <th>Operations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reservation in pagination.items %}
+                        <tr>
+                            <td>{{ reservation.getID() }}</td>
+                            <td>{{ reservation.getUserID() }}</td>
+                            <td>{{ reservation.getCar().getMake() }}</td> 
+                            <td>{{ reservation.getCar().getModel() }}</td> 
+                            <td>{{ reservation.getStartTime() }}</td>
+                            <td>{{ reservation.getEndTime() }}</td>
+                            <td>{{ reservation.getStatus() }}</td>
+                            <td>
+                                {% if reservation.getStatus() == 'pending' %}
+                                    <form style="display: inline;" method="POST" action="{{ url_for('approve_reservation', reservation_id=reservation.getID()) }}">
+                                        <button type="submit">Approve</button>
+                                    </form>
+                                    <form style="display: inline;" method="POST" action="{{ url_for('reject_reservation', reservation_id=reservation.getID()) }}">
+                                        <button type="submit">Reject</button>
+                                    </form>
+                                {% else %}
+                                    {{ reservation.getStatus() }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="list-page">
+            <ul>
+                {% for page_num in pagination.iter_pages() %}
+                    {% if page_num %}
+                        <li>
+                            <a href="{{ url_for('admin_reservation_list', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                    {% else %}
+                        <li><span class="ellipsis">...</span></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

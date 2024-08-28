@@ -73,3 +73,9 @@ class Car:
             # print(car.__dict__)
             cars.append(car)
         return cars
+    
+    def delete(self):
+        if self._id:
+            query = "DELETE FROM cars WHERE id = %s"
+            params = (self._id,)
+            execute_query(query, params)

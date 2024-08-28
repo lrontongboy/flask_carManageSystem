@@ -1,0 +1,61 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Edit Car{% endblock %}
+
+{% block link %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"/>
+{% endblock %}
+
+{% block body %}
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list">
+            <button id="toggleSidebar">Switch Sidebar</button>
+            <a href="{{ url_for('admin_car_list') }}">Home</a>
+            <span class="crumb-step">&gt;</span>
+            <span>Edit Car</span>
+        </div>
+    </div>
+
+    <div class="result-wrap">
+        <div class="add_stu">
+            <form id="edit_car_form" name="edit_car_form" class="add_form" method="POST" action="{{ url_for('edit_car', car_id=car.getID()) }}">
+                <h3>Edit Car</h3>
+                <input type="hidden" name="car_id" value="{{ car.getID() }}">
+                <label for="make">Make:<input class="common-text" name="make" size="50" type="text" value="{{ car.getMake() }}" required></label>
+                <label for="model">Model:<input class="common-text" name="model" size="50" type="text" value="{{ car.getModel() }}" required></label>
+                <label for="year">Year:<input class="common-text" name="year" size="50" type="number" value="{{ car.getYear() }}" required></label>
+                <label for="color">Color:<input class="common-text" name="color" size="50" type="text" value="{{ car.getColor() }}" required></label>
+                <label for="image_url">Image URL:<input class="common-text" name="image_url" size="50" type="text" value="{{ car.getImageURL() }}"></label>
+                <label for="details">Details:<textarea class="common-text" name="details" rows="5" cols="50">{{ car.getDetails() }}</textarea></label>
+                <button id="submit_btn" type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#edit_car_form').submit(function(e) {
+            e.preventDefault(); 
+            $.ajax({
+                url: $(this).attr('action'), 
+                type: 'POST',
+                data: $(this).serialize(), 
+                dataType: 'json',
+                success: function(response) {
+                    alert(response.message);
+                    if (response.status === 'success') {
+                        // 可以根据需要跳转到车辆列表页面
+                        // window.location.href = '{{ url_for('admin_car_list') }}';
+                    }
+                },
+                error: function() {
+                    alert('更新车辆信息失败，请稍后再试。');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

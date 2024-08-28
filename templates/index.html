@@ -22,17 +22,16 @@
 {% block body %}
     <main>
         <div class="container">
-            <h2>欢迎来到汽车租赁系统</h2>
+            <h2>Welcome to the car rental system.</h2>
             {% if not user %}
                 <script>
                     window.location.href = "{{ url_for('login_form') }}";
-                    console.log("user",user)
+                    
                 </script>
             {% else %}
-                {% if user.is_admin %}
+                {% if g.user.isAdmin() %}
                     <script>
-                        
-                        window.location.href = "{{ url_for('admin_register_users') }}";
+                        window.location.href = "{{ url_for('admin_register_user') }}";
                     </script>
                 {% else %}
                     <script>

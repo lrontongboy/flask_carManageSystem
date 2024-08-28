@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}">
-    <script src="{{ url_for('static', filename='js/jquery-3.7.1.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='jquery-3.7.1.js') }}" type="text/javascript"></script>
     {% block link %}{% endblock %}
 </head>
 <body style="background-image: url('{{ url_for('static', filename='img/bg.png') }}')">
@@ -13,13 +13,13 @@
     <div class="topbar-inner clearfix">
         <div class="topbar-logo-wrap clearfix">
             <ul class="navbar-list clearfix">
-                <li><a class="on" href="{{ url_for('index') }}">Student System</a></li>
-                <li><a href="{{ url_for('index') }}" target="_blank">Home</a></li>
+                <li><a class="on" href="{{ url_for('admin') }}">Car Rental Management System</a></li>
+                <li><a href="{{ url_for('admin_register_user') }}" target="_blank">Home</a></li>
             </ul>
         </div>
         <div class="top-info-wrap">
             <ul class="top-info-list clearfix">
-                <li><a href="#">{{ user.name }}</a></li>
+                <li><a href="#">{{ g.user.getUsername() }}</a></li>
                 <li><a href="{{ url_for('logout') }}">Log out</a></li>
             </ul>
         </div>
@@ -30,38 +30,28 @@
     <div class="sidebar-wrap">
         <div class="sidebar-content">
             <ul class="sidebar-list">
-                <li id="register_users"><a href="{{ url_for('admin_register_users') }}">Registered user</a></li>
-                <li><a href="{{ url_for('admin_can_register', identity=1) }}" id="identity1">Teacher</a></li>
-                <li><a href="{{ url_for('admin_can_register', identity=2) }}" id="identity2">Student</a></li>
-                <li><a href="{{ url_for('admin_lecture') }}" id="lecture">Lecture Management</a></li>
-                <li><a href="{{ url_for('admin_course') }}" id="course">Course Management</a></li>
+                <li id="register_users"><a href="{{ url_for('admin_register_user') }}">User management</a></li>
+                <li><a href="{{ url_for('admin_car_list') }}" id="car_manage">Vehicle management</a></li>
+                <li><a href="{{ url_for('admin_reservation_list') }}" id="reserve_manage">Appointment Management</a></li>
             </ul>
         </div>
     </div>
     {% block body %}{% endblock %}
 
 </div>
-<script src="{{ url_for('static', filename='js/base.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='base.js') }}" type="text/javascript"></script>
 <script>
     url = window.location.href
     if (url.includes('register_users')) {
         li = document.getElementById('register_users')
         li.classList.add('selected')
     }
-    if (url.includes('identity=2')) {
-        li = document.getElementById('identity2')
+    if (url.includes('car_manage')) {
+        li = document.getElementById('car_manage')
         li.classList.add('selected')
     }
-    if (url.includes('identity=1')) {
-        li = document.getElementById('identity1')
-        li.classList.add('selected')
-    }
-    if (url.includes('/lecture')) {
-        li = document.getElementById('lecture')
-        li.classList.add('selected')
-    }
-    if (url.includes('course')) {
-        li = document.getElementById('course')
+    if (url.includes('reserve_manage')) {
+        li = document.getElementById('reserve_manage')
         li.classList.add('selected')
     }
 </script>

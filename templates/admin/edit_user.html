@@ -1,0 +1,61 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block link %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='common.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"/>
+{% endblock %}
+
+{% block body %}
+<div class="main-wrap">
+    <div class="crumb-wrap">
+        <div class="crumb-list">
+            <button id="toggleSidebar">Switch Sidebar</button>
+            <a href="{{ url_for('admin_register_user') }}">Home</a>
+            <span class="crumb-step">&gt;</span>
+            <a class="crumb-name" href="{{ url_for('admin_register_user') }}">Registration Management</a>
+            <span class="crumb-step">&gt;</span>
+            <span>Edit User</span>
+        </div>
+    </div>
+
+    <div class="result-wrap">
+        <div class="add_stu">
+            <form id="edit_user_form" name="edit_user_form" class="add_form" method="POST">
+                <h3>Edit User</h3>
+                <input type="hidden" name="user_id" value="{{ user.getID() }}">
+                <label for="username">Username:<input class="common-text" name="username" size="50" type="text" value="{{ user.getUsername() }}" required></label>
+                <label for="real_name">Real Name:<input class="common-text" name="real_name" size="50" type="text" value="{{ user.getRealName() }}"></label>
+                <label for="date_of_birth">Date of Birth:<input class="common-text" name="date_of_birth" size="50" type="date" value="{{ user.getDateOfBirth().strftime('%Y-%m-%d') if user.getDateOfBirth() else '' }}"></label>
+                <label for="address">Address:<input class="common-text" name="address" size="50" type="text" value="{{ user.getAddress() }}"></label>
+                <button id="submit_btn" type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#edit_user_form').submit(function(e) {
+            e.preventDefault(); 
+            $.ajax({
+                url: $(this).attr('action'), 
+                type: 'POST',
+                data: $(this).serialize(), 
+                dataType: 'json',
+                success: function(response) {
+                    alert(response.message);
+                    if (response.status === 'success') {
+                        // 可以根据需要跳转到用户列表页面
+                        // window.location.href = '{{ url_for('admin_register_user') }}';
+                    }
+                },
+                error: function() {
+                    alert('更新用户信息失败，请稍后再试。');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
